@@ -1,0 +1,69 @@
+# 依赖
+node_modules/
+dist/
+site/
+
+# 文档构建
+docs/.doctree
+docs/build/
+
+# MkDocs
+site/
+
+# Python
+__pycache__/
+*.py[cod].*
+*.so
+.Python
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.Spotlight-V100
+.Thumbs.db
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 测试
+coverage/
+*.log
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# 临时文件
+*.tmp
+*.temp
+.cache
+
+# 数据库
+*.sqlite
+*.db
+
+# 压缩文件
+*.zip
+*.tar
+*.gz
+
+# 文档
+*.bak
+*.backup
+*.old
+
+# MkDocs生成的文件
+site/
+
+# Claude (AI Assistant) 配置
+.claude/

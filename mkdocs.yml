@@ -1,0 +1,91 @@
+site_name: 儿童逻辑思维游戏
+site_description: 适合3岁儿童的趣味逻辑思维网页游戏集，完美适配iPhone/iPad
+site_author: OpenCode AI
+site_url: https://your-domain.com
+
+# 版权
+copyright: Copyright &copy; 2026 OpenCode AI. MIT License
+
+# 主题
+theme:
+  name: material
+  palette:
+    # 主色调
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+  
+  language: zh
+  
+  # 功能配置
+  features:
+    - navigation.instant       # 即时导航
+    - navigation.tracking       # URL跟踪
+    - navigation.top           # 顶部导航
+    - navigation.sections      # 分区
+    - navigation.expand        # 可展开
+    - search.suggest           # 搜索建议
+    - search.highlight         # 搜索高亮
+    - content.code.copy        # 代码复制
+    - toc.follow               # 目录跟随
+    - announce.dismiss          # 公告关闭
+  
+  # 字体
+  font:
+    text: Noto Sans SC
+    code: Roboto Mono
+
+# 插件
+plugins:
+  - search:
+      separator: '[\s\-\.]+'
+      lang:
+        - zh
+        - en
+
+# Markdown扩展
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - footnotes
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+# 导航
+nav:
+  - 游戏介绍:
+      - 颜色配对: games/color-match.md
+      - 形状识别: games/shape-match.md
+      - 简单拼图: games/simple-puzzle.md
+      - 数字认知: games/number-count.md
+      - 记忆大师: games/memory-match.md
+      - 字母配对: games/letter-match.md
+  - 部署指南: deploy/edgeone.md
+
+# 额外配置
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yourusername/kids-logic-games
+  version:
+    provider: mike
+    default: latest

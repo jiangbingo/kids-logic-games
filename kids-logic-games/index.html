@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>儿童逻辑思维游戏</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 用户登录界面 -->
+        <div id="login-screen" style="display: none;">
+            <div class="login-container">
+                <h1 class="game-title">👋 欢迎来到游戏世界</h1>
+                <div class="login-form">
+                    <div class="input-group">
+                        <label for="username">请输入你的名字：</label>
+                        <input type="text" id="username" class="game-input" placeholder="例如：小明" maxlength="10">
+                    </div>
+                    <button id="login-btn" class="login-btn">开始游戏 🎮</button>
+                    <div class="existing-users">
+                        <p class="section-title">或选择已有用户：</p>
+                        <div id="user-list" class="user-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主菜单 -->
+        <div id="main-menu">
+            <div class="user-info" id="user-info" style="display: none;">
+                <span id="current-user-name"></span>
+                <button id="switch-user-btn" class="small-btn">切换用户</button>
+            </div>
+            <h1 class="game-title">🎮 趣味逻辑游戏</h1>
+            <div class="game-grid">
+                <div class="game-card" data-game="color-match">
+                    <div class="game-icon">🎨</div>
+                    <h3>颜色配对</h3>
+                    <p>找到相同的颜色</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="shape-match">
+                    <div class="game-icon">⭐</div>
+                    <h3>形状识别</h3>
+                    <p>认识各种形状</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="simple-puzzle">
+                    <div class="game-icon">🧩</div>
+                    <h3>简单拼图</h3>
+                    <p>完成可爱的拼图</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="number-count">
+                    <div class="game-icon">🔢</div>
+                    <h3>数字认知</h3>
+                    <p>学习数数啦</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="memory-match">
+                    <div class="game-icon">🧠</div>
+                    <h3>记忆大师</h3>
+                    <p>锻炼记忆力</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="letter-match">
+                    <div class="game-icon">🔤</div>
+                    <h3>字母配对</h3>
+                    <p>认识字母啦</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 游戏容器 -->
+        <div id="game-container" style="display: none;">
+            <div class="game-header">
+                <button id="back-btn" class="nav-btn">← 返回</button>
+                <span id="game-title" class="game-title-small">游戏名称</span>
+                <div class="game-stats">
+                    <span id="level-display" class="level-badge">关卡: 1</span>
+                    <span id="score" class="score">得分: 0</span>
+                </div>
+            </div>
+            <div id="game-area"></div>
+        </div>
+    </div>
+
+    <!-- ✅ 关键修复：使用 Cache Busting 强制刷新 JS 文件 -->
+    <!-- ?v=2.0 会让浏览器认为这是一个新文件，强制重新下载 -->
+    <script src="js/storage.js?v=2.0"></script>
+    <script src="js/api.js?v=2.0"></script>
+    <script src="js/games.js?v=2.0"></script>
+    <script src="js/app.js?v=2.0"></script>
+</body>
+</html>
