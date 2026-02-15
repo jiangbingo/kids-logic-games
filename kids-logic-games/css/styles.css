@@ -40,6 +40,23 @@ body {
     padding: 20px 0;
 }
 
+/* 新游戏样式调整 - 更紧凑的布局以适应更多游戏 */
+@media (max-width: 768px) {
+    .game-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        padding: 15px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px 0;
+    }
+}
+
 .game-card {
     background: white;
     border-radius: 20px;
@@ -962,5 +979,596 @@ button:active, .game-card:active, .game-item:active, .puzzle-piece:active {
 @keyframes spin {
     to {
         transform: rotate(360deg);
+    }
+}
+
+/* ==================== 新游戏样式 ==================== */
+
+/* 声音配对游戏 */
+.sound-player {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 300px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.sound-player:hover {
+    transform: scale(1.05);
+}
+
+.sound-player.playing {
+    animation: soundPulse 1s ease infinite;
+}
+
+@keyframes soundPulse {
+    0%, 100% {
+        transform: scale(1);
+        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    }
+    50% {
+        transform: scale(1.1);
+        background: linear-gradient(135deg, #ffb74d 0%, #ff9800 100%);
+    }
+}
+
+.sound-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.sound-text {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+}
+
+.sound-display {
+    display: none;
+    font-size: 24px;
+    color: white;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.sound-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+}
+
+.animal-emoji {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.animal-name {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* 大小比较游戏 */
+.size-comparison {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px auto;
+    max-width: 500px;
+    gap: 20px;
+}
+
+.size-item {
+    text-align: center;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.size-vs {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.size-emoji {
+    margin: 10px 0;
+}
+
+.size-emoji.big-emoji {
+    font-size: 48px;
+}
+
+.size-emoji.small-emoji {
+    font-size: 24px;
+}
+
+.size-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.size-item-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.size-emoji-option.big-emoji-option {
+    font-size: 48px;
+}
+
+.size-emoji-option.small-emoji-option {
+    font-size: 24px;
+}
+
+.size-label-option {
+    font-weight: bold;
+    color: #333;
+    margin-top: 8px;
+}
+
+/* 拖放游戏 */
+.drag-drop-area {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.items-area {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.items-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.draggable-item {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    cursor: grab;
+    transition: all 0.3s ease;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.draggable-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.draggable-item.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.item-emoji {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.item-name {
+    font-size: 12px;
+    color: #333;
+    font-weight: bold;
+}
+
+.targets-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.drop-target {
+    background: rgba(255, 255, 255, 0.9);
+    border: 3px dashed #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    min-width: 150px;
+    min-height: 150px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.drop-target.drag-over {
+    border-color: #4caf50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.target-emoji {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.target-label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.target-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.placed-item {
+    margin: 5px;
+    padding: 8px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 情感识别游戏 */
+.emotion-display {
+    background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 300px;
+    text-align: center;
+}
+
+.emotion-emoji {
+    font-size: 64px;
+    margin-bottom: 15px;
+}
+
+.emotion-question {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+}
+
+.emotion-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.emotion-item .emotion-emoji {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.emotion-item .emotion-name {
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+}
+
+/* 触摸画画游戏 */
+.drawing-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px auto;
+    flex-wrap: wrap;
+}
+
+.color-palette {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.color-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.color-option.selected {
+    border-color: #333;
+    transform: scale(1.2);
+}
+
+.clear-btn, .complete-btn, .restart-btn {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.complete-btn {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+}
+
+.restart-btn {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+}
+
+.clear-btn:hover, .complete-btn:hover, .restart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.drawing-canvas-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.drawing-canvas {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.drawing-stats {
+    text-align: center;
+    margin: 20px auto;
+    font-size: 16px;
+    color: #555;
+    font-weight: bold;
+}
+
+.completed-canvas {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.completion-stats {
+    text-align: center;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.completion-stats span {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* 音乐节奏游戏 */
+.rhythm-display {
+    margin: 30px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    max-width: 400px;
+}
+
+.rhythm-beats {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.beat-indicator {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.beat-indicator.active {
+    background: #4caf50;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+}
+
+.rhythm-controls, .player-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px auto;
+}
+
+.play-btn, .repeat-btn {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 15px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.repeat-btn {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+}
+
+.play-btn:hover, .repeat-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.play-btn:disabled, .repeat-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.rhythm-pad {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.rhythm-pad:hover {
+    background: #d0d0d0;
+}
+
+.pad-button {
+    font-size: 48px;
+}
+
+.player-status {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* 响应式设计优化 */
+@media (max-width: 768px) {
+    .sound-player {
+        max-width: 250px;
+        padding: 20px;
+    }
+    
+    .size-comparison {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .drag-drop-area {
+        gap: 20px;
+    }
+    
+    .draggable-item {
+        padding: 10px;
+    }
+    
+    .item-emoji {
+        font-size: 24px;
+    }
+    
+    .drawing-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .rhythm-beats {
+        gap: 10px;
+    }
+    
+    .beat-indicator {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .rhythm-pad {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .pad-button {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sound-icon {
+        font-size: 36px;
+    }
+    
+    .emotion-emoji {
+        font-size: 48px;
+    }
+    
+    .drawing-canvas {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .beat-indicator {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .rhythm-pad {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .pad-button {
+        font-size: 28px;
+    }
+}
+
+.difficulty-notification {
+    touch-action: manipulation;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -100%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -100%);
     }
 }

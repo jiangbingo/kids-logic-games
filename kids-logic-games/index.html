@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>儿童逻辑思维游戏</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23667eea'/%3E%3Ctext x='16' y='22' font-size='20' text-anchor='middle' fill='white'%3E🎮%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -88,6 +89,67 @@
                         <button class="action-btn btn-endless" data-mode="endless">无限</button>
                     </div>
                 </div>
+                <div class="game-card" data-game="sound-match">
+                    <div class="game-icon">🔊</div>
+                    <h3>声音配对</h3>
+                    <p>听动物叫声</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="size-compare">
+                    <div class="game-icon">🐘🐭</div>
+                    <h3>大小比较</h3>
+                    <p>认识大小概念</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="drag-drop">
+                    <div class="game-icon">🎯</div>
+                    <h3>简单拖放</h3>
+                    <p>拖动小物品</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="emotion-match">
+                    <div class="game-icon">😊😢</div>
+                    <h3>情感识别</h3>
+                    <p>认识小表情</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="touch-draw">
+                    <div class="game-icon">🎨</div>
+                    <h3>触摸画画</h3>
+                    <p>自由画画</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">开始画画</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="music-rhythm">
+                    <div class="game-icon">🎵</div>
+                    <h3>音乐节奏</h3>
+                    <p>跟着音乐跳</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" data-mode="campaign">闯关</button>
+                        <button class="action-btn btn-endless" data-mode="endless">无限</button>
+                    </div>
+                </div>
+                <div class="game-card" data-game="ai-demo">
+                    <div class="game-icon">🤖</div>
+                    <h3>AI 题目生成</h3>
+                    <p>智能无限题目</p>
+                    <div class="game-actions">
+                        <button class="action-btn btn-campaign" onclick="window.location.href='ai-game-demo.html'">体验</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -105,11 +167,10 @@
         </div>
     </div>
 
-    <!-- ✅ 关键修复：使用 Cache Busting 强制刷新 JS 文件 -->
-    <!-- ?v=2.0 会让浏览器认为这是一个新文件，强制重新下载 -->
-    <script src="js/storage.js?v=2.0"></script>
-    <script src="js/api.js?v=2.0"></script>
-    <script src="js/games.js?v=2.0"></script>
-    <script src="js/app.js?v=2.0"></script>
+    <script src="js/storage.js?t=1739644260123"></script>
+    <script src="js/difficulty.js?t=1739644260127"></script>
+    <script src="js/api.js?t=1739644260124"></script>
+    <script src="js/games.js?t=1739644260125"></script>
+    <script src="js/app.js?t=1739644260126"></script>
 </body>
 </html>

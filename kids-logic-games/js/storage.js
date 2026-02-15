@@ -455,8 +455,209 @@ class LocalStorage {
     }
 }
 
+/**
+ * AI 题目缓存管理类
+ * 负责管理 AI 生成的游戏题目的缓存
+ */
+class AIGameCache {
+  constructor() {
+    this.storageKey = 'kids_ai_game_cache';
+    this.cacheDays = 7;
+    this.cache = this.loadCache();
+  }
+
+  /**
+   * 从 localStorage 加载缓存
+   */
+  loadCache() {
+    try {
+      const data = localStorage.getItem(this.storageKey);
+      return data ? JSON.parse(data) : {};
+    } catch (error) {
+      console.error('加载 AI 题目缓存失败:', error);
+      return {};
+    }
+  }
+
+  /**
+   * 保存缓存到 localStorage
+   */
+  saveCache() {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.cache));
+      return true;
+    } catch (error) {
+      console.error('保存 AI 题目缓存失败:', error);
+      return false;
+    }
+  }
+
+  /**
+   * 保存 AI 生成的题目
+   * @param {string} gameType - 游戏类型 (memory, shape, sound)
+   * @param {Object} gameData - 游戏数据
+   * @param {Object} params - 生成参数 (theme, ageGroup, difficulty, scene)
+   */
+  saveGame(gameType, gameData, params = {}) {
+    const cacheKey = this.generateCacheKey(gameType, params);
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + this.cacheDays * 24 * 60 * 60 * 1000);
+
+    this.cache[cacheKey] = {
+      gameType,
+      gameData,
+      params,
+      createdAt: now.toISOString(),
+      expiresAt: expiresAt.toISOString()
+    };
+
+    this.saveCache();
+    console.log(`✅ AI 题目已保存: ${cacheKey}`, this.cache[cacheKey]);
+  }
+
+  /**
+   * 读取 AI 生成的题目
+   * @param {string} gameType - 游戏类型 (memory, shape, sound)
+   * @param {Object} params - 生成参数
+   * @returns {Object|null} 游戏数据,如果不存在或已过期返回 null
+   */
+  getGame(gameType, params = {}) {
+    const cacheKey = this.generateCacheKey(gameType, params);
+    const cached = this.cache[cacheKey];
+
+    if (!cached) {
+      console.log(`⚠️ 缓存不存在: ${cacheKey}`);
+      return null;
+    }
+
+    const expiresAt = new Date(cached.expiresAt);
+    const now = new Date();
+    if (now > expiresAt) {
+      console.log(`⚠️ 缓存已过期: ${cacheKey}`);
+      delete this.cache[cacheKey];
+      this.saveCache();
+      return null;
+    }
+
+    console.log(`✅ 使用缓存数据: ${cacheKey}`);
+    return cached.gameData;
+  }
+
+  /**
+   * 获取游戏类型的所有缓存数据 (不指定参数时使用)
+   * @param {string} gameType - 游戏类型 (memory, shape, sound)
+   * @returns {Object|null} 游戏数据
+   */
+  getLatestGame(gameType) {
+    const cacheEntries = Object.entries(this.cache)
+      .filter(([key, value]) => value.gameType === gameType && this.isValidCache(value))
+      .sort((a, b) => new Date(b[1].createdAt) - new Date(a[1].createdAt));
+
+    if (cacheEntries.length === 0) {
+      console.log(`⚠️ 没有找到 ${gameType} 的缓存`);
+      return null;
+    }
+
+    const latest = cacheEntries[0];
+    console.log(`✅ 使用最新缓存: ${latest[0]}`);
+    return latest[1].gameData;
+  }
+
+  /**
+   * 生成缓存键
+   */
+  generateCacheKey(gameType, params) {
+    const parts = [gameType];
+    
+    if (params.theme) parts.push(params.theme);
+    if (params.scene) parts.push(params.scene);
+    if (params.ageGroup) parts.push(params.ageGroup);
+    if (params.difficulty) parts.push(params.difficulty);
+    
+    return parts.join('_');
+  }
+
+  /**
+   * 检查缓存是否有效
+   */
+  isValidCache(cached) {
+    const expiresAt = new Date(cached.expiresAt);
+    const now = new Date();
+    return now <= expiresAt;
+  }
+
+  /**
+   * 清除所有缓存
+   */
+  clearAll() {
+    this.cache = {};
+    this.saveCache();
+    console.log('🗑️ AI 题目缓存已清除');
+  }
+
+  /**
+   * 清除特定游戏类型的缓存
+   */
+  clearGameType(gameType) {
+    Object.keys(this.cache).forEach(key => {
+      if (this.cache[key].gameType === gameType) {
+        delete this.cache[key];
+      }
+    });
+    this.saveCache();
+    console.log(`🗑️ ${gameType} 题目缓存已清除`);
+  }
+
+  /**
+   * 清除过期缓存
+   */
+  clearExpired() {
+    const now = new Date();
+    let clearedCount = 0;
+
+    Object.keys(this.cache).forEach(key => {
+      const expiresAt = new Date(this.cache[key].expiresAt);
+      if (now > expiresAt) {
+        delete this.cache[key];
+        clearedCount++;
+      }
+    });
+
+    if (clearedCount > 0) {
+      this.saveCache();
+      console.log(`🗑️ 已清除 ${clearedCount} 个过期缓存`);
+    }
+  }
+
+  /**
+   * 获取缓存统计信息
+   */
+  getCacheStats() {
+    const stats = {
+      total: 0,
+      byType: { memory: 0, shape: 0, sound: 0 },
+      expired: 0
+    };
+
+    const now = new Date();
+
+    Object.values(this.cache).forEach(cached => {
+      stats.total++;
+      if (stats.byType[cached.gameType] !== undefined) {
+        stats.byType[cached.gameType]++;
+      }
+      if (now > new Date(cached.expiresAt)) {
+        stats.expired++;
+      }
+    });
+
+    return stats;
+  }
+}
+
 // 导出到全局
 window.UserStorage = UserStorage;
 window.ProgressStorage = ProgressStorage;
 window.GameManager = GameManager;
 window.LocalStorage = LocalStorage;
+window.AIGameCache = AIGameCache;

@@ -124,7 +124,13 @@ class APIClient {
      */
     async healthCheck() {
         try {
-            const response = await fetch(`${this.baseURL.replace('/api', '')}/health`);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2000);
+            
+            const response = await fetch(`${this.baseURL.replace('/api', '')}/health`, {
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
             return response.ok;
         } catch (error) {
             return false;
@@ -139,20 +145,38 @@ class APIClient {
 class CloudStorage {
     constructor() {
         this.api = new APIClient();
-        this.localStorage = new LocalStorage(); // 作为fallback
+        this.localStorage = new LocalStorage();
         this.userStorage = this.localStorage.userStorage;
         this.progressStorage = this.localStorage.progressStorage;
         this.useCloud = false;
+        this.cloudChecked = false;
     }
 
-    /**
-     * 检查是否可以使用云端存储
-     */
     async checkCloudAvailability() {
-        const isAvailable = await this.api.healthCheck();
-        this.useCloud = isAvailable;
-        console.log('Cloud storage available:', isAvailable);
-        return isAvailable;
+        if (this.cloudChecked) return this.useCloud;
+        
+        const hostname = window.location.hostname || '';
+        const isLocalhost = hostname === 'localhost' || 
+                           hostname === '127.0.0.1' ||
+                           hostname.startsWith('192.168.') ||
+                           hostname.startsWith('10.') ||
+                           hostname === '';
+        
+        if (isLocalhost) {
+            this.useCloud = false;
+            this.cloudChecked = true;
+            return false;
+        }
+        
+        try {
+            const isAvailable = await this.api.healthCheck();
+            this.useCloud = isAvailable;
+            this.cloudChecked = true;
+        } catch (error) {
+            this.useCloud = false;
+            this.cloudChecked = true;
+        }
+        return this.useCloud;
     }
 
     /**

@@ -114,12 +114,12 @@ class App {
         const actionButtons = document.querySelectorAll('.action-btn');
         actionButtons.forEach(btn => {
             this.addTouchFeedback(btn);
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', async (e) => {
                 e.stopPropagation(); // 防止冒泡到卡片
                 const gameCard = btn.closest('.game-card');
                 const gameType = gameCard.dataset.game;
                 const mode = btn.dataset.mode;
-                this.openGame(gameType, mode);
+                await this.openGame(gameType, mode);
             });
         });
 
@@ -145,7 +145,7 @@ class App {
         }, { passive: true });
     }
 
-    handleLogin() {
+    async handleLogin() {
         const usernameInput = document.getElementById('username');
         const username = usernameInput.value.trim();
         const errorDiv = document.querySelector('.error-message');
@@ -156,7 +156,7 @@ class App {
         }
 
         try {
-            const user = this.storage.createUser(username);
+            const user = await this.storage.createUser(username);
             this.currentUser = user;
             usernameInput.value = '';
             this.showMainMenu();
@@ -165,7 +165,7 @@ class App {
             errorMessage.className = 'error-message';
             errorMessage.textContent = error.message;
             usernameInput.parentNode.insertBefore(errorMessage, usernameInput);
-            
+
             // 震动提示（如果支持）
             if (navigator.vibrate) {
                 navigator.vibrate(200);
@@ -181,7 +181,7 @@ class App {
         }
     }
 
-    openGame(gameType, mode = 'campaign') {
+    async openGame(gameType, mode = 'campaign') {
         const mainMenu = document.getElementById('main-menu');
         const gameContainer = document.getElementById('game-container');
         const levelDisplay = document.getElementById('level-display');
@@ -189,8 +189,8 @@ class App {
         mainMenu.style.display = 'none';
         gameContainer.style.display = 'block';
 
-        // 获取当前关卡
-        const currentLevel = this.gameManager.getCurrentLevel(gameType);
+        // 获取当前关卡（使用 await 正确处理 Promise）
+        const currentLevel = await this.gameManager.getCurrentLevel(gameType);
         if (levelDisplay) {
             if (mode === 'endless') {
                 levelDisplay.textContent = '模式: 无限挑战';
@@ -209,7 +209,7 @@ class App {
         };
 
         document.getElementById('game-title').textContent = gameNames[gameType];
-        this.games.startGame(gameType, mode, currentLevel);
+        await this.games.startGame(gameType, mode, currentLevel);
     }
 
     backToMenu() {
