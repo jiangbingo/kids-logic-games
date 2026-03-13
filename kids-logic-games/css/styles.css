@@ -1572,3 +1572,98 @@ button:active, .game-card:active, .game-item:active, .puzzle-piece:active {
         transform: translate(-50%, -100%);
     }
 }
+
+
+    
+    .category-tab {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}
+
+
+/* 分类标签栏样式 - 增强版 */
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1000px;
+}
+
+.category-tab {
+    padding: 16px 28px;
+    background: rgba(255, 255, 255, 0.25);
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    border-radius: 30px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    min-width: 120px;
+    text-align: center;
+}
+
+.category-tab:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.category-tab.active {
+    background: white;
+    color: #667eea;
+    border-color: white;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+.category-tab:active {
+    transform: scale(0.98);
+}
+
+/* 游戏卡片隐藏/显示动画 */
+.game-card {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.game-card.hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .category-tabs {
+        gap: 10px;
+        margin-bottom: 30px;
+        padding: 15px;
+    }
+    
+    .category-tab {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-tabs {
+        gap: 8px;
+        padding: 10px;
+    }
+    
+    .category-tab {
+        padding: 10px 16px;
+        font-size: 12px;
+        min-width: 80px;
+    }
+}

@@ -2994,3 +2994,562 @@ class Games {
 }
 
 // Production: Development logs removed
+
+// ==================== 涂鸦板游戏 ====================
+class DrawingBoardGame {
+    constructor(gameManager) {
+        this.gameManager = gameManager;
+        this.gameType = 'drawing-board';
+        this.name = '涂鸦板';
+        this.icon = '🎨';
+        this.canvas = null;
+        this.ctx = null;
+        this.currentColor = '#000000';
+        this.currentSize = 5;
+        this.isDrawing = false;
+    }
+    
+    startGame() {
+        const gameArea = document.getElementById('game-area');
+        gameArea.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <h2>🎨 涂鸦板</h2>
+                <div style="margin: 20px 0;">
+                    <span style="margin: 0 10px;">颜色：</span>
+                    <button onclick="this.setColor('#ff0000')" style="width: 30px; height: 30px; background: #ff0000; border: 2px solid #ccc; cursor: pointer;"></button>
+                    <button onclick="this.setColor('#00ff00')" style="width: 30px; height: 30px; background: #00ff00; border: 2px solid #ccc; cursor: pointer;"></button>
+                    <button onclick="this.setColor('#0000ff')" style="width: 30px; height: 30px; background: #0000ff; border: 2px solid #ccc; cursor: pointer;"></button>
+                    <button onclick="this.setColor('#ffff00')" style="width: 30px; height: 30px; background: #ffff00; border: 2px solid #ccc; cursor: pointer;"></button>
+                    <button onclick="this.setColor('#000000')" style="width: 30px; height: 30px; background: #000000; border: 2px solid #ccc; cursor: pointer;"></button>
+                </div>
+                <div style="margin: 20px 0;">
+                    <span style="margin: 0 10px;">大小：</span>
+                    <button onclick="this.setSize(5)" style="padding: 10px 20px; cursor: pointer;">小</button>
+                    <button onclick="this.setSize(10)" style="padding: 10px 20px; cursor: pointer;">中</button>
+                    <button onclick="this.setSize(20)" style="padding: 10px 20px; cursor: pointer;">大</button>
+                </div>
+                <div style="margin: 20px 0;">
+                    <button onclick="this.clearCanvas()" style="padding: 10px 20px; cursor: pointer;">🗑️ 清空</button>
+                    <button onclick="this.saveCanvas()" style="padding: 10px 20px; cursor: pointer;">💾 保存</button>
+                </div>
+                <canvas id="drawing-canvas" style="border: 2px solid #ccc; background: white; cursor: crosshair; display: block; margin: 0 auto;"></canvas>
+            </div>
+        `;
+        
+        this.canvas = document.getElementById('drawing-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.setupCanvas();
+        this.setupEvents();
+    }
+    
+    setupCanvas() {
+        const container = this.canvas.parentElement;
+        this.canvas.width = Math.min(600, container.offsetWidth - 40);
+        this.canvas.height = this.canvas.width;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
+        this.ctx.strokeStyle = this.currentColor;
+        this.ctx.lineWidth = this.currentSize;
+    }
+    
+    setupEvents() {
+        const canvas = this.canvas;
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(lastX, lastY);
+            this.ctx.lineTo(e.offsetX, e.offsetY);
+            this.ctx.stroke();
+            
+            lastX = e.offsetX;
+            lastY = e.offsetY;
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            isDrawing = false;
+        });
+        
+        // 触摸事件
+        canvas.addEventListener('touchstart', (e) => {
+            isDrawing = true;
+            const touch = e.touches[0];
+            lastX = touch.clientX - canvas.offsetLeft;
+            lastY = touch.clientY - canvas.offsetTop;
+        });
+        
+        canvas.addEventListener('touchmove', (e) => {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const x = touch.clientX - canvas.offsetLeft;
+            const y = touch.clientY - canvas.offsetTop;
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(lastX, lastY);
+            this.ctx.lineTo(x, y);
+            this.ctx.stroke();
+            
+            lastX = x;
+            lastY = y;
+        });
+        
+        canvas.addEventListener('touchend', () => {
+            isDrawing = false;
+        });
+    }
+    
+    setColor(color) {
+        this.currentColor = color;
+        this.ctx.strokeStyle = color;
+    }
+    
+    setSize(size) {
+        this.currentSize = size;
+        this.ctx.lineWidth = size;
+    }
+    
+    clearCanvas() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.showToast('🗑️ 已清空');
+    }
+    
+    saveCanvas() {
+        const link = document.createElement('a');
+        link.download = `涂鸦_${new Date().toLocaleString('zh-CN').replace(/[/:]/g, '-')}.png`;
+        link.href = this.canvas.toDataURL('image/png');
+        link.click();
+        this.showToast('💾 已保存');
+    }
+    
+    showToast(message) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,1,1,0.8); color: white; padding: 12px 24px; border-radius: 8px; z-index: 1000;';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+}
+
+/**
+ * 记忆翻牌游戏
+ * 4x3卡片配对训练记忆力
+ */
+class MemoryCardsGame {
+    constructor(gameManager) {
+        this.gameManager = gameManager;
+        this.gameType = 'memory-cards';
+        this.name = '记忆翻牌';
+        this.emojis = ['🐶', '🐱', '🐰', '🦊', '🐻', '🐼'];
+        this.cards = [];
+        this.flippedCards = [];
+        this.matchedPairs = 0;
+        this.moves = 0;
+        this.isLocked = false;
+    }
+
+    start() {
+        document.getElementById('game-title').textContent = '🎴 记忆翻牌';
+        this.initGame();
+    }
+
+    initGame() {
+        const gameArea = document.getElementById('game-area');
+        gameArea.innerHTML = `
+            <div class="memory-stats">
+                <div class="memory-stat">步数: <span id="memory-moves">0</span></div>
+                <div class="memory-stat">配对: <span id="memory-pairs">0</span>/6</div>
+            </div>
+            <div class="memory-grid" id="memory-grid"></div>
+            <button class="memory-restart-btn" id="memory-restart">🔄 重新开始</button>
+            <div class="memory-celebration" id="memory-celebration">
+                <div class="celebration-text">🎉 太棒了!</div>
+            </div>
+        `;
+
+        this.addStyles();
+        this.flippedCards = [];
+        this.matchedPairs = 0;
+        this.moves = 0;
+        this.isLocked = false;
+
+        document.getElementById('memory-moves').textContent = '0';
+        document.getElementById('memory-pairs').textContent = '0';
+        document.getElementById('memory-celebration').classList.remove('active');
+
+        this.createCards();
+        
+        document.getElementById('memory-restart').addEventListener('click', () => {
+            this.initGame();
+        });
+    }
+}
+
+/**
+ * 颜色配对游戏
+ * 认识基本颜色
+ */
+class ColorMatchingGame {
+    constructor(gameManager) {
+        this.gameManager = gameManager;
+        this.gameType = 'color-matching';
+        this.name = '颜色配对';
+        this.colors = [
+            { name: '红色', hex: '#FF4757', light: '#FF6B7A' },
+            { name: '黄色', hex: '#FFA502', light: '#FFB732' },
+            { name: '蓝色', hex: '#3742FA', light: '#5352ED' },
+            { name: '绿色', hex: '#2ED573', light: '#7BED9F' },
+            { name: '橙色', hex: '#FF6B35', light: '#FF7F50' },
+            { name: '紫色', hex: '#A55EEA', light: '#BE7ADB' },
+            { name: '粉色', hex: '#FF69B4', light: '#FF85C1' },
+            { name: '黑色', hex: '#2C3E50', light: '#34495E' }
+        ];
+        this.score = 0;
+        this.targetColor = null;
+        this.isAnimating = false;
+    }
+
+    start() {
+        document.getElementById('game-title').textContent = '🎨 颜色配对';
+        this.score = 0;
+        this.initGame();
+    }
+
+    initGame() {
+        const gameArea = document.getElementById('game-area');
+        gameArea.innerHTML = `
+            <div class="color-header">
+                <div class="color-title">找颜色</div>
+                <div class="color-score">
+                    <span class="star">⭐</span> <span id="color-score">0</span>
+                </div>
+            </div>
+            <div class="color-target">
+                <div class="color-target-label">找到这个颜色：</div>
+                <div class="color-target-name" id="color-target-name">红色</div>
+            </div>
+            <div class="color-feedback" id="color-feedback"></div>
+            <div class="color-options" id="color-options"></div>
+        `;
+
+        this.addStyles();
+        this.newRound();
+    }
+
+    addStyles() {
+        if (document.getElementById('color-game-styles')) return;
+        
+        const styles = document.createElement('style');
+        styles.id = 'color-game-styles';
+        styles.textContent = `
+            .color-header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .color-title {
+                font-size: 2rem;
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
+            .color-score {
+                font-size: 1.5rem;
+                background: rgba(255,255,255,0.2);
+                padding: 10px 30px;
+                border-radius: 20px;
+                display: inline-block;
+            }
+            .star { color: #FFD700; }
+            .color-target {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .color-target-label {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            .color-target-name {
+                font-size: 2.5rem;
+                font-weight: bold;
+                animation: colorPulse 1s ease-in-out infinite;
+            }
+            @keyframes colorPulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+            .color-feedback {
+                font-size: 2.5rem;
+                font-weight: bold;
+                text-align: center;
+                min-height: 60px;
+                margin-bottom: 20px;
+            }
+            .color-options {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                max-width: 400px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .color-btn {
+                width: 120px;
+                height: 120px;
+                border: 6px solid white;
+                border-radius: 25px;
+                cursor: pointer;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                transition: transform 0.1s, box-shadow 0.1s;
+                touch-action: manipulation;
+            }
+            .color-btn:active {
+                transform: scale(0.9);
+            }
+            .color-btn.correct {
+                animation: correctFlash 0.5s ease;
+                box-shadow: 0 0 30px rgba(255,255,255,0.8);
+            }
+            @keyframes correctFlash {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.15); }
+            }
+            .color-btn.wrong {
+                animation: wrongShake 0.5s ease;
+            }
+            @keyframes wrongShake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-15px); }
+                75% { transform: translateX(15px); }
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+
+    newRound() {
+        if (this.isAnimating) return;
+        
+        const shuffled = [...this.colors].sort(() => Math.random() - 0.5);
+        const selectedColors = shuffled.slice(0, 4);
+        
+        this.targetColor = selectedColors[Math.floor(Math.random() * selectedColors.length)];
+        document.getElementById('color-target-name').textContent = this.targetColor.name;
+        
+        const optionsArea = document.getElementById('color-options');
+        optionsArea.innerHTML = '';
+        
+        const shuffledOptions = [...selectedColors].sort(() => Math.random() - 0.5);
+        
+        shuffledOptions.forEach(color => {
+            const btn = document.createElement('button');
+            btn.className = 'color-btn';
+            btn.style.background = `linear-gradient(135deg, ${color.hex} 0%, ${color.light} 100%)`;
+            btn.dataset.color = color.name;
+            
+            this.gameManager.addTouchFeedback(btn);
+            btn.addEventListener('click', () => this.checkAnswer(color.name, btn));
+            optionsArea.appendChild(btn);
+        });
+    }
+
+    checkAnswer(selected, btnElement) {
+        if (this.isAnimating) return;
+        this.isAnimating = true;
+        
+        const isCorrect = selected === this.targetColor.name;
+        const feedback = document.getElementById('color-feedback');
+        
+        if (isCorrect) {
+            btnElement.classList.add('correct');
+            feedback.textContent = '对了！🎉';
+            this.playSound('correct');
+            this.score++;
+            document.getElementById('color-score').textContent = this.score;
+            
+            setTimeout(() => {
+                feedback.textContent = '';
+                btnElement.classList.remove('correct');
+                this.isAnimating = false;
+                this.newRound();
+            }, 1200);
+        } else {
+            btnElement.classList.add('wrong');
+            feedback.textContent = '再试试！💪';
+            this.playSound('wrong');
+            
+            setTimeout(() => {
+                feedback.textContent = '';
+                btnElement.classList.remove('wrong');
+                this.isAnimating = false;
+            }, 800);
+        }
+    }
+
+    playSound(type) {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            const config = {
+                correct: { freq: 659.25, duration: 0.15, type: 'sine' },
+                wrong: { freq: 196.00, duration: 0.2, type: 'square' }
+            };
+            
+            const c = config[type] || config.correct;
+            oscillator.type = c.type;
+            oscillator.frequency.setValueAtTime(c.freq, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + c.duration);
+            
+            oscillator.start(audioCtx.currentTime);
+            oscillator.stop(audioCtx.currentTime + c.duration);
+        } catch(e) {}
+    }
+}
+
+    addStyles() {
+        if (document.getElementById('memory-styles')) return;
+        const styles = document.createElement('style');
+        styles.id = 'memory-styles';
+        styles.textContent = `
+            .memory-stats {
+                display: flex;
+                gap: 20px;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+            .memory-stat {
+                background: rgba(255,255,255,0.2);
+                padding: 8px 16px;
+                border-radius: 20px;
+            }
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 11px;
+            max-width: 400px;
+            margin: 0 auto 15px;
+        }
+    `;
+        document.head.appendChild(styles);
+    }
+
+    createCards() {
+        const grid = document.getElementById('memory-grid');
+        grid.innerHTML = '';
+        
+        const emojiPairs = [...this.emojis, ...this.emojis];
+        this.cards = this.shuffle(emojiPairs);
+        
+        this.cards.forEach((emoji, index) => {
+            const card = document.createElement('div');
+            card.className = 'memory-card';
+            card.dataset.emoji = emoji;
+            card.dataset.index = index;
+            card.innerHTML = `
+                <div class="memory-card-inner">
+                    <div class="memory-card-face memory-card-back"></div>
+                    <div class="memory-card-face memory-card-front">${emoji}</div>
+                </div>
+            `;
+            
+            this.gameManager.addTouchFeedback(card);
+            card.addEventListener('click', () => this.flipCard(card));
+            grid.appendChild(card);
+        });
+    }
+
+    shuffle(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    flipCard(card) {
+        if (this.isLocked || 
+            card.classList.contains('flipped') || 
+            card.classList.contains('matched')) {
+            return;
+        }
+
+        card.classList.add('flipped');
+        this.flippedCards.push(card);
+
+        if (this.flippedCards.length === 2) {
+            this.moves++;
+            document.getElementById('memory-moves').textContent = this.moves;
+            this.checkMatch();
+        }
+    }
+
+    checkMatch() {
+        this.isLocked = true;
+        const [card1, card2] = this.flippedCards;
+        const isMatch = card1.dataset.emoji === card2.dataset.emoji;
+
+        if (isMatch) {
+            setTimeout(() => {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                this.matchedPairs++;
+                document.getElementById('memory-pairs').textContent = this.matchedPairs;
+                
+                this.flippedCards = [];
+                this.isLocked = false;
+
+                if (this.matchedPairs === 6) {
+                    setTimeout(() => this.showCelebration(), 500);
+                }
+            }, 300);
+        } else {
+            setTimeout(() => {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                this.flippedCards = [];
+                this.isLocked = false;
+            }, 1000);
+        }
+    }
+
+    showCelebration() {
+        const celebration = document.getElementById('memory-celebration');
+        celebration.classList.add('active');
+        
+        // 创建confetti
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.textContent = ['🎉', '🎊', '⭐', '💫'][Math.floor(Math.random() * 4)];
+                confetti.style.cssText = `
+                    position: absolute;
+                    left: ${Math.random() * 100}vw;
+                    font-size: ${15 + Math.random() * 20}px;
+                    animation: fall 3s linear forwards;
+                `;
+                celebration.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }, i * 100);
+        }
+    }
+}
+
